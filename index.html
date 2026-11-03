@@ -16,12 +16,13 @@
         :root {
             --bg-main: #000000;
             --bg-app: #0d0e12;
-            --bg-card: #1a1b1e;
-            --bg-btn: #1a2636;
+            --bg-card: #141518; /* Темный фон карточек */
+            --bg-btn: #181c26; /* Фон кнопок действий */
+            --bg-grey: #212124;
             --text-main: #ffffff;
             --text-muted: #8e929b;
             --blue-accent: #4b97f6;
-            --blue-bg: #1a283b;
+            --blue-bg: #1a2636;
         }
 
         * {
@@ -39,398 +40,430 @@
             min-height: 100vh;
             color: var(--text-main);
             padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         .app-container {
-            background-color: var(--bg-app);
+            background-color: var(--bg-main);
             width: 100%;
             max-width: 400px;
             min-height: 100vh;
-            padding: 10px 20px 40px 20px;
+            position: relative;
             display: flex;
             flex-direction: column;
-            position: relative;
         }
 
-        /* --- ВЕРХНЯЯ ПАНЕЛЬ --- */
-        .top-nav {
+        /* Скрытие/Показ экранов */
+        .view {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 10px 16px 80px 16px;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+        .view.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =========================================
+           ЭКРАН 1: ГЛАВНЫЙ ЭКРАН (ДАШБОРД)
+           ========================================= */
+        
+        .search-bar {
+            background-color: var(--bg-grey);
+            border-radius: 16px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            margin-top: 10px;
+        }
+        .search-bar svg { width: 20px; height: 20px; fill: var(--text-muted); }
+        .search-bar input {
+            background: transparent; border: none; outline: none;
+            color: var(--text-main); font-size: 16px; width: 100%;
+        }
+
+        .profile-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 0 30px 0;
-            position: relative;
-        }
-
-        .back-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 5px;
-            margin-left: -10px;
-        }
-
-        .back-btn svg {
-            width: 28px;
-            height: 28px;
-            fill: var(--blue-accent);
-        }
-
-        .date-time-wrapper {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 250px;
-            text-align: center;
-        }
-
-        .date-time-text {
-            font-size: 22px;
-            font-weight: 500;
-            color: var(--text-main);
-            cursor: pointer;
-            display: inline-block;
-            pointer-events: none;
-        }
-
-        .hidden-datetime-input {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-            font-size: 100px; 
-        }
-
-        /* --- ОСТАЛЬНОЙ ИНТЕРФЕЙС --- */
-        .header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 16px;
-            margin-top: 20px;
-        }
-
-        .logo-circle {
-            width: 100px;
-            height: 100px;
-            background-color: #e6f5ed;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .logo-shape {
-            width: 50px;
-            height: 22px;
-            background-color: #007e46;
-            border-top-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-        }
-
-        .app-title {
-            font-size: 20px;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-        }
-
-        .category-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
             margin-bottom: 24px;
         }
+        .profile-info { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #444; object-fit: cover; }
+        .profile-name { font-size: 28px; font-weight: 500; display: flex; align-items: center; gap: 4px;}
+        .profile-name svg { width: 20px; height: 20px; fill: #fff; }
+        .gift-btn { width: 44px; height: 44px; border-radius: 50%; background: #6b46c1; display: flex; justify-content: center; align-items: center; }
+        .gift-btn svg { width: 24px; height: 24px; fill: #fff; }
 
-        .category-pill {
-            background-color: var(--blue-bg);
-            color: var(--blue-accent);
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .banners-scroll {
+            display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+            margin: 0 -16px 24px -16px; padding: 0 16px; scrollbar-width: none;
         }
-
-        .icon-btn-circle {
-            width: 34px;
-            height: 34px;
-            background-color: var(--blue-bg);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
+        .banners-scroll::-webkit-scrollbar { display: none; }
+        .banner-card {
+            min-width: 140px; height: 140px; border-radius: 20px; padding: 12px;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            position: relative; scroll-snap-align: start; overflow: hidden;
+            border: 2px solid #334e6d;
         }
-
-        .icon-btn-circle svg { width: 16px; height: 16px; fill: var(--blue-accent); }
-
-        .amount {
-            font-size: 56px;
-            font-weight: 500;
-            text-align: center;
-            margin-bottom: 32px;
-            letter-spacing: -1.5px;
+        .banner-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.8) 100%); z-index: 1;
         }
+        .banner-text { position: relative; z-index: 2; font-size: 14px; font-weight: 500; line-height: 1.2; }
+        .banner1 { background: linear-gradient(135deg, #f6d365, #fda085); }
+        .banner2 { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); color: #333; }
+        .banner2::before { background: linear-gradient(180deg, transparent 40%, rgba(255,255,255,0.8) 100%); }
+        .banner3 { background: linear-gradient(135deg, #fbc2eb, #a6c1ee); }
 
-        .actions-grid {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 24px;
+        .grid-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+        .dash-card { background: var(--bg-grey); border-radius: 24px; padding: 16px; cursor: pointer; }
+        .dash-card:active { opacity: 0.8; }
+        .dash-card-title { font-size: 18px; font-weight: 400; margin-bottom: 8px; display: flex; justify-content: space-between;}
+        .dash-card-sub { font-size: 14px; color: #ccc; margin-bottom: 16px; }
+        .progress-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: #333; }
+        .progress-orange { background: #f6ad55; width: 40%; }
+        .progress-blue { background: #63b3ed; width: 30%; }
+        .progress-pink { background: #d6bcfa; width: 30%; }
+
+        .badge-red { background: #ef4444; color: #fff; font-size: 11px; padding: 2px 6px; border-radius: 10px; font-weight: bold; }
+        .cashback-icons { display: flex; gap: 8px; }
+        .cb-icon { width: 36px; height: 36px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; }
+
+        .actions-row { display: flex; gap: 12px; margin-bottom: 24px; }
+        .action-btn-dash { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+        .action-btn-dash:active { opacity: 0.7; }
+        .action-square { width: 100%; aspect-ratio: 1.5; background: var(--bg-grey); border-radius: 20px; display: flex; justify-content: center; align-items: center; }
+        .action-square svg { width: 28px; height: 28px; fill: var(--blue-accent); }
+        .action-btn-dash span { font-size: 12px; text-align: center; color: #fff; line-height: 1.2; }
+
+        .zarta-balance-card { background: var(--bg-grey); border-radius: 24px; padding: 20px; }
+        .zarta-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .zarta-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--blue-accent); display: flex; justify-content: center; align-items: center; margin-right: 12px; }
+        .zarta-icon svg { width: 24px; height: 24px; fill: #fff; }
+        .zarta-info { display: flex; gap: 12px; }
+        .zarta-balance-text { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+        .zarta-balance-sub { font-size: 14px; color: #ccc; }
+        .zarta-badge { background: #333; padding: 4px 10px; border-radius: 12px; font-size: 12px; display: flex; align-items: center; gap: 4px; }
+        .zarta-badge svg { width: 14px; height: 14px; fill: #ccc; }
+        .zarta-thumb { width: 60px; height: 40px; background: #111; border-radius: 8px; display: flex; align-items: flex-end; padding: 4px; margin-top: 10px; }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 400px; height: 70px;
+            background: var(--bg-main); border-top: 1px solid #222;
+            display: flex; justify-content: space-around; align-items: center;
+            padding-bottom: env(safe-area-inset-bottom); z-index: 100;
         }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); cursor: pointer; position: relative; }
+        .nav-item.active { color: var(--blue-accent); }
+        .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
+        .nav-item span { font-size: 10px; }
+        .nav-badge { position: absolute; top: -4px; right: -8px; background: #ef4444; color: #fff; font-size: 10px; font-weight: bold; width: 16px; height: 16px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
 
-        .action-btn {
-            flex: 1;
-            background-color: var(--bg-btn);
-            border-radius: 18px;
-            padding: 16px 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            border: none;
-            cursor: pointer;
+
+        /* =========================================
+           ЭКРАН 2: ДЕТАЛИ ТРАНЗАКЦИИ (ОБНОВЛЕННЫЙ)
+           ========================================= */
+        .top-nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 0 24px 0; position: relative;
         }
+        .back-btn { background: none; border: none; cursor: pointer; display: flex; padding: 5px; }
+        .back-btn svg { width: 24px; height: 24px; fill: var(--blue-accent); }
 
+        .date-time-wrapper { position: absolute; left: 50%; transform: translateX(-50%); width: 100%; max-width: 250px; text-align: center; }
+        .date-time-text { font-size: 20px; font-weight: 500; color: var(--text-main); cursor: pointer; display: inline-block; pointer-events: none; }
+        .hidden-datetime-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; font-size: 100px; }
+
+        .header-logo { display: flex; flex-direction: column; align-items: center; margin-bottom: 12px; }
+        .logo-circle { width: 90px; height: 90px; background-color: #e6f5ed; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 12px; }
+        .logo-shape { width: 44px; height: 18px; background-color: #007e46; border-top-left-radius: 30px; border-bottom-right-radius: 30px; }
+        .app-title { font-size: 18px; font-weight: 400; color: #d1d5db; }
+
+        /* Обновленный тег категории (Коричневый) */
+        .category-row { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 20px; }
+        .category-pill-brown { 
+            background-color: #2b241a; 
+            color: #d9a55c; 
+            padding: 6px 12px; 
+            border-radius: 16px; 
+            font-size: 14px; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+        }
+        .icon-btn-circle { width: 32px; height: 32px; background-color: #1e2433; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .icon-btn-circle svg { width: 14px; height: 14px; fill: #6b95d8; }
+
+        .amount { font-size: 44px; font-weight: 500; text-align: center; margin-bottom: 24px; letter-spacing: -1px; }
+
+        /* 2 кнопки вместо 3 */
+        .actions-grid { display: flex; gap: 12px; margin-bottom: 24px; justify-content: center; padding: 0 10px; }
+        .action-btn { 
+            flex: 1; 
+            background-color: #161f30; 
+            border-radius: 16px; 
+            padding: 14px 8px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+            border: none; 
+            cursor: pointer; 
+        }
         .action-btn:active { opacity: 0.7; }
-        .action-btn svg { width: 26px; height: 26px; fill: var(--blue-accent); }
-        .action-btn span { color: var(--blue-accent); font-size: 13px; text-align: center; }
+        .action-btn svg { width: 24px; height: 24px; fill: #6da2f8; }
+        .action-btn span { color: #6da2f8; font-size: 14px; text-align: center; }
 
-        .transaction-card {
+        /* Карточка транзакции */
+        .transaction-card { background-color: var(--bg-card); border-radius: 24px; padding: 20px; margin-bottom: 16px; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .card-title { font-size: 20px; font-weight: 500; line-height: 1.2; display: flex; flex-direction: column; gap: 4px; }
+        .tpay-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            border: 1px solid #eab308; border-radius: 12px; padding: 2px 6px;
+            font-size: 11px; font-weight: bold; color: #facc15; width: max-content;
+        }
+        .tpay-badge span { background: #facc15; color: #000; border-radius: 50%; width: 12px; height: 12px; display: flex; align-items: center; justify-content: center; font-size: 9px;}
+        
+        .card-link { color: var(--blue-accent); font-size: 15px; text-decoration: none; margin-top: 4px;}
+        
+        .card-body { display: flex; align-items: center; gap: 16px; }
+        .thumbnail { 
+            width: 56px; height: 44px; border-radius: 8px; background: #111; 
+            position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 4px; 
+        }
+        .thumbnail::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(120deg, #555, #111); }
+        .thumbnail-text { position: relative; z-index: 2; color: #fff; font-size: 8px; font-weight: 500; line-height: 1.1; }
+        
+        .merchant-info { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+        .merchant-name-row { display: flex; align-items: center; gap: 8px; }
+        .merchant-name { font-size: 18px; font-weight: 500; }
+        .speaker-icon { width: 18px; height: 18px; background: #333; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+        .speaker-icon svg { width: 10px; height: 10px; fill: #ccc; }
+        .merchant-amount { font-size: 15px; color: var(--text-muted); }
+        
+        .chevron-right { width: 24px; height: 24px; fill: #555; }
+
+        /* Карточка аналитики */
+        .analytics-card {
             background-color: var(--bg-card);
             border-radius: 24px;
             padding: 20px;
-            margin-bottom: 28px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: 20px;
-        }
-
-        .card-title { font-size: 20px; font-weight: 400; }
-        .card-link { color: var(--blue-accent); font-size: 15px; text-decoration: none; }
-
-        .card-body { display: flex; align-items: center; gap: 16px; }
-
-        .thumbnail {
-            width: 48px;
-            height: 48px;
-            border-radius: 8px;
-            background: #222;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: flex-end;
-            padding: 4px;
-        }
-        
-        .thumbnail::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(120deg, #444, #111);
-        }
-
-        .thumbnail-text {
-            position: relative;
-            z-index: 2;
-            color: #fff;
-            font-size: 9px;
-            font-weight: 500;
-            line-height: 1;
-        }
-
-        .merchant-info { display: flex; align-items: center; gap: 10px; }
-        .merchant-name { font-size: 18px; font-weight: 400; }
-
-        .speaker-icon {
-            width: 22px;
-            height: 22px;
-            background: #333;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .speaker-icon svg { width: 12px; height: 12px; fill: #ccc; }
-
-        .recommendations-title {
-            font-size: 22px;
-            font-weight: 400;
-            margin-bottom: 16px;
-        }
-
-        .recommendations-grid { display: flex; gap: 12px; }
-
-        .rec-card {
-            flex: 1;
-            border-radius: 16px;
-            padding: 16px 12px;
             display: flex;
             flex-direction: column;
-            position: relative;
-            overflow: hidden;
-            min-height: 220px;
         }
-
-        .rec-card.blue-card {
-            background: linear-gradient(145deg, #10386b, #081a33);
-            border: 1px solid #1c4b82;
+        .analytics-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
         }
-
-        .rec-card.white-card {
-            background: #ffffff;
-            color: #000000;
-            border: 1px solid #e0e0e0;
+        .analytics-title { font-size: 20px; font-weight: 500; margin-bottom: 4px;}
+        .analytics-sub { font-size: 15px; color: var(--text-muted); margin-bottom: 16px; }
+        .analytics-icon { font-size: 32px; }
+        .analytics-btn {
+            background-color: #24252a;
+            color: var(--blue-accent);
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 15px;
+            width: 100%;
+            cursor: pointer;
         }
-
-        .rec-card .sub-label {
-            font-size: 9px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            line-height: 1.2;
-        }
-
-        .blue-card .sub-label { color: #8fb8ea; }
-        .white-card .sub-label { color: #666; }
-
-        .rec-card .title {
-            font-size: 16px;
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 12px;
-            z-index: 2;
-        }
-
-        .blue-card .title { color: #ffffff; }
-        .white-card .title { color: #004b99; }
-
-        .rec-card .badge {
-            background: #ffcc00;
-            color: #000;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 4px 6px;
-            border-radius: 4px;
-            align-self: flex-start;
-            z-index: 2;
-            margin-top: auto;
-        }
-
-        .box-decor {
-            position: absolute;
-            bottom: -30px;
-            right: -20px;
-            width: 140px;
-            height: 140px;
-            border-radius: 20px;
-            transform: rotate(-20deg);
-            z-index: 1;
-        }
-
-        .blue-card .box-decor { background: #1e5c9e; opacity: 0.4; }
-        .white-card .box-decor { background: #e5f0fa; opacity: 0.8; }
+        .analytics-btn:active { background-color: #333; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     
-    <div class="top-nav">
-        <button class="back-btn" onclick="history.back()">
-            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-        </button>
+    <!-- ========================================== -->
+    <!-- ЭКРАН 1: ГЛАВНЫЙ ЭКРАН (ДАШБОРД)           -->
+    <!-- ========================================== -->
+    <div id="dashboardView" class="view active">
         
-        <div class="date-time-wrapper">
-            <span class="date-time-text" id="displayDateTime">Загрузка...</span>
-            <input type="datetime-local" id="nativeDateTime" class="hidden-datetime-input">
+        <div class="search-bar">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" placeholder="Поиск">
         </div>
-        
-        <div style="width: 28px;"></div>
-    </div>
 
-    <div class="header">
-        <div class="logo-circle"><div class="logo-shape"></div></div>
-        <div class="app-title">НСПК</div>
-    </div>
-
-    <div class="category-row">
-        <div class="category-pill">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/></svg>
-            Транспорт • MCC 4131
+        <div class="profile-row">
+            <div class="profile-info">
+                <img src="https://i.pravatar.cc/150?img=11" alt="Avatar" class="avatar">
+                <div class="profile-name">Глеб <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></div>
+            </div>
+            <div class="gift-btn">
+                <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
+            </div>
         </div>
-        <div class="icon-btn-circle">
-            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+
+        <div class="banners-scroll">
+            <div class="banner-card banner1"><div class="banner-text">Узнать кэшбэк дня</div></div>
+            <div class="banner-card banner2"><div class="banner-text" style="color:#000; font-weight:600;">Как оплатить учебу за счет банка</div></div>
+            <div class="banner-card banner3"><div class="banner-text">Новая эра в «5 буквах»</div></div>
         </div>
-    </div>
 
-    <div class="amount">−88 ₽</div>
-
-    <div class="actions-grid">
-        <button class="action-btn">
-            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/><line x1="3" y1="3" x2="21" y2="21" stroke="#4b97f6" stroke-width="2.5" stroke-linecap="round"/></svg>
-            <span>Не учитывать</span>
-        </button>
-        <button class="action-btn">
-            <svg viewBox="0 0 24 24"><path d="M1 21h12v2H1zM5.24 17.77l1.41-1.41 4.24-4.24 3.54 3.54-4.24 4.24-1.41 1.41-3.54-3.54zM15.26 6.52l-1.41-1.41c-.39-.39-1.02-.39-1.41 0L10.41 7.14l3.54 3.54 2.03-2.03c.39-.39.39-1.02 0-1.41zM19.22 10.48l-1.41-1.41-3.54 3.54 1.41 1.41c.39.39 1.02.39 1.41 0l2.13-2.13c.39-.39.39-1.02 0-1.41z"/></svg>
-            <span>Оспорить</span>
-        </button>
-        <button class="action-btn">
-            <svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="5" fill="none" stroke="#4b97f6" stroke-width="2.5"/><circle cx="16" cy="12" r="5" fill="none" stroke="#4b97f6" stroke-width="2.5"/><line x1="8" y1="12" x2="16" y2="12" stroke="#4b97f6" stroke-width="2.5"/></svg>
-            <span>Разделить</span>
-        </button>
-    </div>
-
-    <div class="transaction-card">
-        <div class="card-header">
-            <div class="card-title">Покупка по карте</div>
-            <a href="#" class="card-link">Справка</a>
-        </div>
-        <div class="card-body">
-            <div class="thumbnail"><span class="thumbnail-text">1286<br>МИР</span></div>
-            <div class="merchant-info">
-                <span class="merchant-name">Zarta</span>
-                <div class="speaker-icon">
-                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        <div class="grid-cards">
+            <div class="dash-card" onclick="showTransaction()">
+                <div class="dash-card-title">Все операции</div>
+                <div class="dash-card-sub">Трат в ноябре<br>361 ₽</div>
+                <div class="progress-bar">
+                    <div class="progress-orange"></div><div class="progress-blue"></div><div class="progress-pink"></div>
+                </div>
+            </div>
+            <div class="dash-card">
+                <div class="dash-card-title">Кэшбэк<br>и бонусы <span class="badge-red">1</span></div>
+                <div class="cashback-icons">
+                    <div class="cb-icon" style="background:#2ecc71; color:#fff;">BB</div>
+                    <div class="cb-icon" style="background:#e67e22;">🦅</div>
+                    <div class="cb-icon" style="background:#fff;">⭐</div>
                 </div>
             </div>
         </div>
+
+        <div class="actions-row">
+            <div class="action-btn-dash"><div class="action-square"><svg viewBox="0 0 24 24"><path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/></svg></div><span>Перевести<br>по телефону</span></div>
+            <div class="action-btn-dash"><div class="action-square"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div><span>Пополнить<br>Zarta</span></div>
+            <div class="action-btn-dash"><div class="action-square"><svg viewBox="0 0 24 24"><path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5zm-6.5 9.5v3h-3v-3h3m1.5-1.5h-6v6h6v-6zM15 15h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2z"/></svg></div><span>Сканировать<br>QR-код</span></div>
+        </div>
+
+        <div class="zarta-balance-card">
+            <div class="zarta-header">
+                <div class="zarta-info">
+                    <div class="zarta-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
+                    <div><div class="zarta-balance-text">25 ₽</div><div class="zarta-balance-sub">Zarta</div></div>
+                </div>
+                <div class="zarta-badge"><svg viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg> 49 ₽</div>
+            </div>
+            <div class="zarta-thumb"><span class="thumbnail-text">1286<br>МИР</span></div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg><span>Главная</span></div>
+            <div class="nav-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg><span>Платежи</span></div>
+            <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11z" fill="currentColor"/><rect x="6" y="13" width="12" height="8" rx="2" fill="currentColor"/></svg><span>Город</span></div>
+            <div class="nav-item"><span class="nav-badge">11</span><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>Чат</span></div>
+            <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z"/></svg><span>Витрина</span></div>
+        </div>
     </div>
 
-    <div class="recommendations-title">Может понравиться</div>
-    <div class="recommendations-grid">
-        <div class="rec-card blue-card">
-            <div class="box-decor"></div>
-            <div class="sub-label">ТАБЛЕТКИ ДЛЯ ПОСУДОМОЕЧНЫХ МАШИН</div>
-            <div class="title">FINISH QUANTUM POWER ALL IN ONE</div>
-            <div class="badge">MEGA VALUE PACK X100</div>
+
+    <!-- ========================================== -->
+    <!-- ЭКРАН 2: ДЕТАЛИ ТРАНЗАКЦИИ (ТОЧЬ-В-ТОЧЬ)   -->
+    <!-- ========================================== -->
+    <div id="transactionView" class="view">
+        
+        <!-- Верхняя панель -->
+        <div class="top-nav">
+            <button class="back-btn" onclick="showDashboard()">
+                <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </button>
+            
+            <div class="date-time-wrapper">
+                <span class="date-time-text" id="displayDateTime">Загрузка...</span>
+                <input type="datetime-local" id="nativeDateTime" class="hidden-datetime-input">
+            </div>
+            
+            <div style="width: 24px;"></div>
         </div>
-        <div class="rec-card white-card">
-            <div class="box-decor"></div>
-            <div class="sub-label">ТАБЛЕТКИ ДЛЯ ПОСУДОМОЕЧНЫХ МАШИН</div>
-            <div class="title">FINISH POWER</div>
-            <div class="badge">100 ШТУК</div>
+
+        <!-- Логотип -->
+        <div class="header-logo">
+            <div class="logo-circle"><div class="logo-shape"></div></div>
+            <div class="app-title">НСПК</div>
         </div>
+
+        <!-- Категория -->
+        <div class="category-row">
+            <div class="category-pill-brown">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/></svg>
+                Местный транспорт • MCC 4131
+            </div>
+            <div class="icon-btn-circle">
+                <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            </div>
+        </div>
+
+        <!-- Сумма -->
+        <div class="amount">−88 ₽</div>
+
+        <!-- Действия (Теперь их ДВА) -->
+        <div class="actions-grid">
+            <button class="action-btn">
+                <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/><line x1="3" y1="3" x2="21" y2="21" stroke="#6da2f8" stroke-width="2.5" stroke-linecap="round"/></svg>
+                <span>Не учитывать</span>
+            </button>
+            <button class="action-btn">
+                <svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="5" fill="none" stroke="#6da2f8" stroke-width="2.5"/><circle cx="16" cy="12" r="5" fill="none" stroke="#6da2f8" stroke-width="2.5"/><line x1="8" y1="12" x2="16" y2="12" stroke="#6da2f8" stroke-width="2.5"/></svg>
+                <span>Разделить</span>
+            </button>
+        </div>
+
+        <!-- Карточка транзакции -->
+        <div class="transaction-card">
+            <div class="card-header">
+                <div class="card-title">
+                    Покупка<br>по карте
+                    <div class="tpay-badge"><span>T</span> PAY</div>
+                </div>
+                <a href="#" class="card-link">Справка</a>
+            </div>
+            <div class="card-body">
+                <div class="thumbnail"><span class="thumbnail-text">1286<br>МИР</span></div>
+                <div class="merchant-info">
+                    <div class="merchant-name-row">
+                        <span class="merchant-name">Зарта</span>
+                        <div class="speaker-icon"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></div>
+                    </div>
+                    <span class="merchant-amount">25 593,17 ₽</span>
+                </div>
+                <svg class="chevron-right" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+            </div>
+        </div>
+
+        <!-- Нижняя карточка аналитики -->
+        <div class="analytics-card">
+            <div class="analytics-header">
+                <div>
+                    <div class="analytics-title">2 покупки в ноябре</div>
+                    <div class="analytics-sub">Потратили здесь 176 ₽</div>
+                </div>
+                <div class="analytics-icon">📅</div>
+            </div>
+            <button class="analytics-btn">К аналитике</button>
+        </div>
+
     </div>
+
 </div>
 
 <script>
-    // --- СОХРАНЕНИЕ И ОТОБРАЖЕНИЕ ДАТЫ/ВРЕМЕНИ ---
+    // --- ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ЭКРАНОВ ---
+    const dashboardView = document.getElementById('dashboardView');
+    const transactionView = document.getElementById('transactionView');
+
+    function showDashboard() {
+        transactionView.classList.remove('active');
+        dashboardView.classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function showTransaction() {
+        dashboardView.classList.remove('active');
+        transactionView.classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    // --- ЛОГИКА ДАТЫ И ВРЕМЕНИ ---
     const nativeInput = document.getElementById('nativeDateTime');
     const displayText = document.getElementById('displayDateTime');
     const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
@@ -445,14 +478,11 @@
     }
 
     function initDateTime() {
-        // Читаем сохраненное значение из памяти телефона
         let savedValue = localStorage.getItem('nspk_saved_datetime');
-        
         if (savedValue) {
             nativeInput.value = savedValue;
             updateDisplay(savedValue);
         } else {
-            // Если памяти нет — ставим текущее время
             const now = new Date();
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -466,7 +496,6 @@
         }
     }
 
-    // При выборе новой даты сохраняем ее в память телефона
     nativeInput.addEventListener('change', (e) => {
         const newValue = e.target.value;
         updateDisplay(newValue);
@@ -475,12 +504,10 @@
 
     initDateTime();
 
-    // --- АКТИВАЦИЯ PWA ---
+    // --- PWA ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js')
-                .then(() => console.log('SW успешно зарегистрирован'))
-                .catch(err => console.log('Ошибка SW:', err));
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW err:', err));
         });
     }
 </script>
