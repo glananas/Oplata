@@ -2,8 +2,16 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>НСПК - Покупка</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>НСПК</title>
+    
+    <!-- PWA Настройки -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.png"> <!-- Если добавите иконку с таким именем -->
+
     <style>
         :root {
             --bg-main: #000000;
@@ -12,7 +20,7 @@
             --bg-btn: #1a2636;
             --text-main: #ffffff;
             --text-muted: #8e929b;
-            --blue-accent: #4b97f6;
+            --blue-accent: #4b97f6; /* Цвет стрелки и кнопок */
             --blue-bg: #1a283b;
         }
 
@@ -30,6 +38,8 @@
             justify-content: center;
             min-height: 100vh;
             color: var(--text-main);
+            /* Отступ для челки iPhone */
+            padding-top: env(safe-area-inset-top);
         }
 
         .app-container {
@@ -37,82 +47,105 @@
             width: 100%;
             max-width: 400px;
             min-height: 100vh;
-            padding: 16px 20px 40px 20px;
+            padding: 10px 20px 40px 20px;
             display: flex;
             flex-direction: column;
             position: relative;
         }
 
-        /* --- БЛОК ВРЕМЕНИ (РЕДАКТИРУЕМЫЙ) --- */
-        .time-wrapper {
+        /* --- ВЕРХНЯЯ ПАНЕЛЬ (КАК НА СКРИНШОТЕ) --- */
+        .top-nav {
             display: flex;
-            justify-content: center;
             align-items: center;
-            margin-bottom: 24px;
-            margin-top: 8px;
+            justify-content: space-between;
+            padding: 10px 0 30px 0;
+            position: relative;
         }
 
-        input[type="time"] {
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--text-main);
-            font-size: 17px;
-            font-weight: 600;
-            font-family: inherit;
+        .back-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            margin-left: -10px;
+        }
+
+        .back-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--blue-accent);
+        }
+
+        /* Контейнер для даты и времени */
+        .date-time-wrapper {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 250px;
             text-align: center;
-            outline: none;
+        }
+
+        .date-time-text {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text-main);
             cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 12px;
-            color-scheme: dark; /* Делает системный выбор времени темным */
-            transition: background-color 0.2s;
+            display: inline-block;
+            pointer-events: none; /* Чтобы клик проходил на прозрачный инпут поверх */
         }
 
-        input[type="time"]:hover, input[type="time"]:focus {
-            background-color: var(--bg-card);
-        }
-
-        /* Убираем лишние отступы и иконки в некоторых браузерах */
-        input[type="time"]::-webkit-calendar-picker-indicator {
+        /* Прозрачный нативный инпут, который лежит поверх текста для вызова системного пикера */
+        .hidden-datetime-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
             cursor: pointer;
-            opacity: 0.6;
+            /* На некоторых браузерах нужно принудительно растянуть */
+            font-size: 100px; 
         }
 
-        /* --- ШАПКА --- */
+        /* --- ОСТАЛЬНОЙ ИНТЕРФЕЙС (БЕЗ ИЗМЕНЕНИЙ) --- */
         .header {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-bottom: 16px;
+            margin-top: 20px;
         }
 
         .logo-circle {
-            width: 72px;
-            height: 72px;
+            width: 100px;
+            height: 100px;
             background-color: #e6f5ed;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
 
         .logo-shape {
-            width: 36px;
-            height: 16px;
+            width: 50px;
+            height: 22px;
             background-color: #007e46;
-            border-top-left-radius: 20px;
-            border-bottom-right-radius: 20px;
+            border-top-left-radius: 30px;
+            border-bottom-right-radius: 30px;
         }
 
         .app-title {
-            font-size: 18px;
-            font-weight: 500;
+            font-size: 20px;
+            font-weight: 400;
             letter-spacing: 0.5px;
             margin-bottom: 12px;
         }
 
-        /* --- КАТЕГОРИЯ --- */
         .category-row {
             display: flex;
             justify-content: center;
@@ -130,7 +163,6 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            font-weight: 400;
         }
 
         .icon-btn-circle {
@@ -144,13 +176,8 @@
             cursor: pointer;
         }
 
-        .icon-btn-circle svg {
-            width: 16px;
-            height: 16px;
-            fill: var(--blue-accent);
-        }
+        .icon-btn-circle svg { width: 16px; height: 16px; fill: var(--blue-accent); }
 
-        /* --- СУММА --- */
         .amount {
             font-size: 56px;
             font-weight: 500;
@@ -159,7 +186,6 @@
             letter-spacing: -1.5px;
         }
 
-        /* --- КНОПКИ ДЕЙСТВИЙ --- */
         .actions-grid {
             display: flex;
             gap: 10px;
@@ -178,27 +204,12 @@
             gap: 12px;
             border: none;
             cursor: pointer;
-            transition: opacity 0.2s;
         }
 
-        .action-btn:active {
-            opacity: 0.7;
-        }
+        .action-btn:active { opacity: 0.7; }
+        .action-btn svg { width: 26px; height: 26px; fill: var(--blue-accent); }
+        .action-btn span { color: var(--blue-accent); font-size: 13px; text-align: center; }
 
-        .action-btn svg {
-            width: 26px;
-            height: 26px;
-            fill: var(--blue-accent);
-        }
-
-        .action-btn span {
-            color: var(--blue-accent);
-            font-size: 13px;
-            font-weight: 400;
-            text-align: center;
-        }
-
-        /* --- КАРТОЧКА ТРАНЗАКЦИИ --- */
         .transaction-card {
             background-color: var(--bg-card);
             border-radius: 24px;
@@ -213,22 +224,10 @@
             margin-bottom: 20px;
         }
 
-        .card-title {
-            font-size: 20px;
-            font-weight: 400;
-        }
+        .card-title { font-size: 20px; font-weight: 400; }
+        .card-link { color: var(--blue-accent); font-size: 15px; text-decoration: none; }
 
-        .card-link {
-            color: var(--blue-accent);
-            font-size: 15px;
-            text-decoration: none;
-        }
-
-        .card-body {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+        .card-body { display: flex; align-items: center; gap: 16px; }
 
         .thumbnail {
             width: 48px;
@@ -242,7 +241,6 @@
             padding: 4px;
         }
         
-        /* Имитация картинки из скриншота */
         .thumbnail::before {
             content: '';
             position: absolute;
@@ -259,16 +257,8 @@
             line-height: 1;
         }
 
-        .merchant-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .merchant-name {
-            font-size: 18px;
-            font-weight: 400;
-        }
+        .merchant-info { display: flex; align-items: center; gap: 10px; }
+        .merchant-name { font-size: 18px; font-weight: 400; }
 
         .speaker-icon {
             width: 22px;
@@ -280,23 +270,15 @@
             align-items: center;
         }
 
-        .speaker-icon svg {
-            width: 12px;
-            height: 12px;
-            fill: #ccc;
-        }
+        .speaker-icon svg { width: 12px; height: 12px; fill: #ccc; }
 
-        /* --- РЕКОМЕНДАЦИИ --- */
         .recommendations-title {
             font-size: 22px;
             font-weight: 400;
             margin-bottom: 16px;
         }
 
-        .recommendations-grid {
-            display: flex;
-            gap: 12px;
-        }
+        .recommendations-grid { display: flex; gap: 12px; }
 
         .rec-card {
             flex: 1;
@@ -354,7 +336,6 @@
             margin-top: auto;
         }
 
-        /* Декоративный элемент (коробка) */
         .box-decor {
             position: absolute;
             bottom: -30px;
@@ -366,24 +347,29 @@
             z-index: 1;
         }
 
-        .blue-card .box-decor {
-            background: #1e5c9e;
-            opacity: 0.4;
-        }
-
-        .white-card .box-decor {
-            background: #e5f0fa;
-            opacity: 0.8;
-        }
+        .blue-card .box-decor { background: #1e5c9e; opacity: 0.4; }
+        .white-card .box-decor { background: #e5f0fa; opacity: 0.8; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     
-    <!-- РЕДАКТИРУЕМОЕ ВРЕМЯ -->
-    <div class="time-wrapper">
-        <input type="time" id="currentTime" value="12:00">
+    <!-- ВЕРХНЯЯ ПАНЕЛЬ С ДАТОЙ И ВРЕМЕНЕМ -->
+    <div class="top-nav">
+        <button class="back-btn" onclick="history.back()">
+            <svg viewBox="0 0 24 24">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+        </button>
+        
+        <div class="date-time-wrapper">
+            <span class="date-time-text" id="displayDateTime">Загрузка...</span>
+            <!-- Скрытый нативный инпут для выбора даты и времени -->
+            <input type="datetime-local" id="nativeDateTime" class="hidden-datetime-input">
+        </div>
+        
+        <div style="width: 28px;"></div> <!-- Пустой блок для баланса -->
     </div>
 
     <!-- ЛОГОТИП -->
@@ -421,14 +407,12 @@
             </svg>
             <span>Не учитывать</span>
         </button>
-
         <button class="action-btn">
             <svg viewBox="0 0 24 24">
                 <path d="M1 21h12v2H1zM5.24 17.77l1.41-1.41 4.24-4.24 3.54 3.54-4.24 4.24-1.41 1.41-3.54-3.54zM15.26 6.52l-1.41-1.41c-.39-.39-1.02-.39-1.41 0L10.41 7.14l3.54 3.54 2.03-2.03c.39-.39.39-1.02 0-1.41zM19.22 10.48l-1.41-1.41-3.54 3.54 1.41 1.41c.39.39 1.02.39 1.41 0l2.13-2.13c.39-.39.39-1.02 0-1.41z"/>
             </svg>
             <span>Оспорить</span>
         </button>
-
         <button class="action-btn">
             <svg viewBox="0 0 24 24">
                 <circle cx="8" cy="12" r="5" fill="none" stroke="#4b97f6" stroke-width="2.5"/>
@@ -446,15 +430,11 @@
             <a href="#" class="card-link">Справка</a>
         </div>
         <div class="card-body">
-            <div class="thumbnail">
-                <span class="thumbnail-text">1286<br>МИР</span>
-            </div>
+            <div class="thumbnail"><span class="thumbnail-text">1286<br>МИР</span></div>
             <div class="merchant-info">
                 <span class="merchant-name">Zarta</span>
                 <div class="speaker-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
                 </div>
             </div>
         </div>
@@ -469,7 +449,6 @@
             <div class="title">FINISH QUANTUM POWER ALL IN ONE</div>
             <div class="badge">MEGA VALUE PACK X100</div>
         </div>
-        
         <div class="rec-card white-card">
             <div class="box-decor"></div>
             <div class="sub-label">ТАБЛЕТКИ ДЛЯ ПОСУДОМОЕЧНЫХ МАШИН</div>
@@ -481,17 +460,57 @@
 </div>
 
 <script>
-    // Установка текущего системного времени при загрузке страницы
-    document.addEventListener("DOMContentLoaded", function() {
-        const timeInput = document.getElementById('currentTime');
+    // --- ЛОГИКА ДАТЫ И ВРЕМЕНИ ---
+    const nativeInput = document.getElementById('nativeDateTime');
+    const displayText = document.getElementById('displayDateTime');
+    const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+
+    // Установка текущей даты при загрузке
+    function setNow() {
         const now = new Date();
-        
-        // Форматируем часы и минуты
+        // Форматируем для инпута: YYYY-MM-DDThh:mm
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');
         
-        timeInput.value = `${hours}:${minutes}`;
+        const dateString = `${year}-${month}-${day}T${hours}:${minutes}`;
+        nativeInput.value = dateString;
+        updateDisplay(dateString);
+    }
+
+    // Обновление текста на экране
+    function updateDisplay(val) {
+        if (!val) return;
+        const d = new Date(val);
+        const day = d.getDate();
+        const month = months[d.getMonth()];
+        const time = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+        
+        displayText.innerText = `${day} ${month}, ${time}`;
+    }
+
+    // Слушаем изменения в инпуте
+    nativeInput.addEventListener('change', (e) => {
+        updateDisplay(e.target.value);
     });
+
+    // Инициализация
+    setNow();
+
+    // --- ЛОГИКА PWA (SERVICE WORKER) ---
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+                .then(registration => {
+                    console.log('ServiceWorker зарегистрирован');
+                })
+                .catch(err => {
+                    console.log('Ошибка регистрации ServiceWorker', err);
+                });
+        });
+    }
 </script>
 
 </body>
