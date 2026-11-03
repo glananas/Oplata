@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="icon.png"> <!-- Если добавите иконку с таким именем -->
+    <link rel="apple-touch-icon" href="icon-192.png">
 
     <style>
         :root {
@@ -20,7 +20,7 @@
             --bg-btn: #1a2636;
             --text-main: #ffffff;
             --text-muted: #8e929b;
-            --blue-accent: #4b97f6; /* Цвет стрелки и кнопок */
+            --blue-accent: #4b97f6;
             --blue-bg: #1a283b;
         }
 
@@ -38,7 +38,6 @@
             justify-content: center;
             min-height: 100vh;
             color: var(--text-main);
-            /* Отступ для челки iPhone */
             padding-top: env(safe-area-inset-top);
         }
 
@@ -53,7 +52,7 @@
             position: relative;
         }
 
-        /* --- ВЕРХНЯЯ ПАНЕЛЬ (КАК НА СКРИНШОТЕ) --- */
+        /* --- ВЕРХНЯЯ ПАНЕЛЬ --- */
         .top-nav {
             display: flex;
             align-items: center;
@@ -79,7 +78,6 @@
             fill: var(--blue-accent);
         }
 
-        /* Контейнер для даты и времени */
         .date-time-wrapper {
             position: absolute;
             left: 50%;
@@ -95,10 +93,9 @@
             color: var(--text-main);
             cursor: pointer;
             display: inline-block;
-            pointer-events: none; /* Чтобы клик проходил на прозрачный инпут поверх */
+            pointer-events: none;
         }
 
-        /* Прозрачный нативный инпут, который лежит поверх текста для вызова системного пикера */
         .hidden-datetime-input {
             position: absolute;
             top: 0;
@@ -107,11 +104,10 @@
             height: 100%;
             opacity: 0;
             cursor: pointer;
-            /* На некоторых браузерах нужно принудительно растянуть */
             font-size: 100px; 
         }
 
-        /* --- ОСТАЛЬНОЙ ИНТЕРФЕЙС (БЕЗ ИЗМЕНЕНИЙ) --- */
+        /* --- ОСТАЛЬНОЙ ИНТЕРФЕЙС --- */
         .header {
             display: flex;
             flex-direction: column;
@@ -355,75 +351,51 @@
 
 <div class="app-container">
     
-    <!-- ВЕРХНЯЯ ПАНЕЛЬ С ДАТОЙ И ВРЕМЕНЕМ -->
     <div class="top-nav">
         <button class="back-btn" onclick="history.back()">
-            <svg viewBox="0 0 24 24">
-                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
         </button>
         
         <div class="date-time-wrapper">
             <span class="date-time-text" id="displayDateTime">Загрузка...</span>
-            <!-- Скрытый нативный инпут для выбора даты и времени -->
             <input type="datetime-local" id="nativeDateTime" class="hidden-datetime-input">
         </div>
         
-        <div style="width: 28px;"></div> <!-- Пустой блок для баланса -->
+        <div style="width: 28px;"></div>
     </div>
 
-    <!-- ЛОГОТИП -->
     <div class="header">
-        <div class="logo-circle">
-            <div class="logo-shape"></div>
-        </div>
+        <div class="logo-circle"><div class="logo-shape"></div></div>
         <div class="app-title">НСПК</div>
     </div>
 
-    <!-- КАТЕГОРИЯ -->
     <div class="category-row">
         <div class="category-pill">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/>
-            </svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/></svg>
             Транспорт • MCC 4131
         </div>
         <div class="icon-btn-circle">
-            <svg viewBox="0 0 24 24">
-                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
         </div>
     </div>
 
-    <!-- СУММА -->
     <div class="amount">−88 ₽</div>
 
-    <!-- ДЕЙСТВИЯ -->
     <div class="actions-grid">
         <button class="action-btn">
-            <svg viewBox="0 0 24 24">
-                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                <line x1="3" y1="3" x2="21" y2="21" stroke="#4b97f6" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/><line x1="3" y1="3" x2="21" y2="21" stroke="#4b97f6" stroke-width="2.5" stroke-linecap="round"/></svg>
             <span>Не учитывать</span>
         </button>
         <button class="action-btn">
-            <svg viewBox="0 0 24 24">
-                <path d="M1 21h12v2H1zM5.24 17.77l1.41-1.41 4.24-4.24 3.54 3.54-4.24 4.24-1.41 1.41-3.54-3.54zM15.26 6.52l-1.41-1.41c-.39-.39-1.02-.39-1.41 0L10.41 7.14l3.54 3.54 2.03-2.03c.39-.39.39-1.02 0-1.41zM19.22 10.48l-1.41-1.41-3.54 3.54 1.41 1.41c.39.39 1.02.39 1.41 0l2.13-2.13c.39-.39.39-1.02 0-1.41z"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M1 21h12v2H1zM5.24 17.77l1.41-1.41 4.24-4.24 3.54 3.54-4.24 4.24-1.41 1.41-3.54-3.54zM15.26 6.52l-1.41-1.41c-.39-.39-1.02-.39-1.41 0L10.41 7.14l3.54 3.54 2.03-2.03c.39-.39.39-1.02 0-1.41zM19.22 10.48l-1.41-1.41-3.54 3.54 1.41 1.41c.39.39 1.02.39 1.41 0l2.13-2.13c.39-.39.39-1.02 0-1.41z"/></svg>
             <span>Оспорить</span>
         </button>
         <button class="action-btn">
-            <svg viewBox="0 0 24 24">
-                <circle cx="8" cy="12" r="5" fill="none" stroke="#4b97f6" stroke-width="2.5"/>
-                <circle cx="16" cy="12" r="5" fill="none" stroke="#4b97f6" stroke-width="2.5"/>
-                <line x1="8" y1="12" x2="16" y2="12" stroke="#4b97f6" stroke-width="2.5"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="5" fill="none" stroke="#4b97f6" stroke-width="2.5"/><circle cx="16" cy="12" r="5" fill="none" stroke="#4b97f6" stroke-width="2.5"/><line x1="8" y1="12" x2="16" y2="12" stroke="#4b97f6" stroke-width="2.5"/></svg>
             <span>Разделить</span>
         </button>
     </div>
 
-    <!-- ТРАНЗАКЦИЯ -->
     <div class="transaction-card">
         <div class="card-header">
             <div class="card-title">Покупка по карте</div>
@@ -440,7 +412,6 @@
         </div>
     </div>
 
-    <!-- РЕКОМЕНДАЦИИ -->
     <div class="recommendations-title">Может понравиться</div>
     <div class="recommendations-grid">
         <div class="rec-card blue-card">
@@ -456,62 +427,62 @@
             <div class="badge">100 ШТУК</div>
         </div>
     </div>
-
 </div>
 
 <script>
-    // --- ЛОГИКА ДАТЫ И ВРЕМЕНИ ---
+    // --- СОХРАНЕНИЕ И ОТОБРАЖЕНИЕ ДАТЫ/ВРЕМЕНИ ---
     const nativeInput = document.getElementById('nativeDateTime');
     const displayText = document.getElementById('displayDateTime');
     const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
-    // Установка текущей даты при загрузке
-    function setNow() {
-        const now = new Date();
-        // Форматируем для инпута: YYYY-MM-DDThh:mm
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        
-        const dateString = `${year}-${month}-${day}T${hours}:${minutes}`;
-        nativeInput.value = dateString;
-        updateDisplay(dateString);
-    }
-
-    // Обновление текста на экране
     function updateDisplay(val) {
         if (!val) return;
         const d = new Date(val);
         const day = d.getDate();
         const month = months[d.getMonth()];
         const time = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-        
         displayText.innerText = `${day} ${month}, ${time}`;
     }
 
-    // Слушаем изменения в инпуте
+    function initDateTime() {
+        // Читаем сохраненное значение из памяти телефона
+        let savedValue = localStorage.getItem('nspk_saved_datetime');
+        
+        if (savedValue) {
+            nativeInput.value = savedValue;
+            updateDisplay(savedValue);
+        } else {
+            // Если памяти нет — ставим текущее время
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const dateString = `${year}-${month}-${day}T${hours}:${minutes}`;
+            nativeInput.value = dateString;
+            updateDisplay(dateString);
+            localStorage.setItem('nspk_saved_datetime', dateString);
+        }
+    }
+
+    // При выборе новой даты сохраняем ее в память телефона
     nativeInput.addEventListener('change', (e) => {
-        updateDisplay(e.target.value);
+        const newValue = e.target.value;
+        updateDisplay(newValue);
+        localStorage.setItem('nspk_saved_datetime', newValue);
     });
 
-    // Инициализация
-    setNow();
+    initDateTime();
 
-    // --- ЛОГИКА PWA (SERVICE WORKER) ---
+    // --- АКТИВАЦИЯ PWA ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
-                .then(registration => {
-                    console.log('ServiceWorker зарегистрирован');
-                })
-                .catch(err => {
-                    console.log('Ошибка регистрации ServiceWorker', err);
-                });
+                .then(() => console.log('SW успешно зарегистрирован'))
+                .catch(err => console.log('Ошибка SW:', err));
         });
     }
 </script>
-
 </body>
 </html>
